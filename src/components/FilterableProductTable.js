@@ -1,19 +1,24 @@
 import React from 'react';
-import SearchBar from './SearchBar';
 import ProductTable from './ProductTable';
+import SearchBar from './SearchBar';
 
-class FilterableProductTable extends React.Component {
+class FilteredProductTable extends React.Component {
   state = {
-    products: this.props.products,
-    filteredProducts: this.props.products
+    products: this.props.products.data,
+    filteredProducts: this.props.products.data,
   };
 
-  handleFilterProducts = (query) => {
-    
-    let visibleProducts = 
-    [...this.state.products].filter((product) => {
-      return product.name.toLowerCase().includes(query.toLowerCase());
+  handleFilterProducts = (filter) => {
+    let { searchQuery, inStock } = filter;
+    let visibleProducts = [...this.state.products].filter((product) => {
+      return product.name.toLowerCase().includes(searchQuery.toLowerCase());
     });
+
+    if (inStock) {
+      visibleProducts = visibleProducts.filter((product) => {
+        return product.stocked;
+      });
+    }
 
     this.setState({
       filteredProducts: visibleProducts,
@@ -30,4 +35,4 @@ class FilterableProductTable extends React.Component {
   }
 }
 
-export default FilterableProductTable;
+export default FilteredProductTable;
